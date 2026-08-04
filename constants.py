@@ -1,0 +1,2 @@
+EXPECTED_PORT: int = 5518
+CONFIDENCE: float = 0.55

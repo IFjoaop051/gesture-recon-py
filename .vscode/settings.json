@@ -1,0 +1,8 @@
+{
+  "editor.fontLigatures": true,
+  "editor.inlineCompletionsAccessibilityVerbose": false,
+  "editor.indentSize": "tabSize",
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "python.analysis.typeCheckingMode": "standard"
+}
