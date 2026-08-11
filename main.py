@@ -12,118 +12,164 @@
 # (scope:"Projeto Avaliativo Trimestral para a disciplina 'Tópicos Avançados em Informática'")
 
 
-from sys import exit
-
 if __name__ != "__main__":
   # Termina a execução do programa se estiver em
   # uma `thread` de trabalho ao invés da principal
   # com o código POSIX `EPRM` (operação não permitida)
 
+  from sys import exit
   exit(-4048)
 
-
-from constants import EXPECTED_PORT, CONFIDENCE
-from functions import ping_http
-
-WEB_ADDRESS = f"http://localhost:{EXPECTED_PORT}"
-
-
-# Antes de continuar, testa se o servidor web com
-# as páginas HTML está disponível. Se não estiver,
-# termina a execução do programa
-
-if not ping_http(WEB_ADDRESS):
-  print(f"[ERROR] Failed to access web server that must serve static HTML pages at :{EXPECTED_PORT}")
-  exit(-11)
 
 
 import cv2
 import mediapipe as mp
 import time
+from flask import Flask, render_template
+from flask_socketio import SocketIO
+from webbrowser import open as open_webb
 
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
+from constants import EXPECTED_PORT, CONFIDENCE
+from gestures_map import GESTURES_MAP
 
-"""
-Utiliza um modelo de ML pré-treinado e publicado pelo Google LLC.
+APP = Flask(__name__)
+APP.config["SECRET"] = "secret!"
 
-Obs.: O modelo pré-treinado não acompanha este repositório.
-Se precisar baixá-lo, procure no site oficial do Google (link abaixo).
-
-- Modelo Pré-treinado: https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task
-- Exemplo no Colab: https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/gesture_recognizer/python/gesture_recognizer.ipynb
-- Mais informações no artigo: https://developers.google.com/edge/mediapipe/solutions/vision/gesture_recognizer/python
-"""
-base_options = python.BaseOptions(model_asset_path="model_tasks/gesture_recognizer.task")
+SIO = SocketIO(APP, cors_allowed_origins="*", logger=True, engineio_logger=True)
 
 
-# Opções padrão para detecção de gestos de apenas
-# uma mão em vídeo, com nível de confiança 55%.
-options = vision.GestureRecognizerOptions(
-  base_options=base_options,
-  running_mode=vision.RunningMode.VIDEO,
-  num_hands=1,
-  min_hand_detection_confidence=CONFIDENCE,
-  min_hand_presence_confidence=CONFIDENCE,
-  min_tracking_confidence=CONFIDENCE
-)
+@APP.get("/")
+def serve_index():
+  return render_template("cardsCarrossel.html")
 
-# Inicia a primeira câmera disponível.
-# Se o computador tiver mais de uma, selecione aqui.
-cap = cv2.VideoCapture(0)
-
-# Contador de frames ignorados porque estavam vazios
-ignored_frames = 0
+@APP.get("/historia.html")
+def serve_history():
+  return render_template("historia.html")
 
 
-with vision.GestureRecognizer.create_from_options(options) as recon:
-  # Aqui, a função [vision/create_from_options()] carrega e
-  # inicializa o modelo de ML, assim como prepara o ambiente (CPU/GPU)
-  # para processar o vídeo e detectar gestos em tempo real.
 
-  while cap.isOpened():
-    success, frame = cap.read()
-
-    if not success: # Ignora frames vazios ao invés que "quebrar" o programa
-      print("Ignoring empty camera frame #%d...", ignored_frames + 1)
-      ignored_frames = ignored_frames + 1
-      
-      continue
-
-    frame = cv2.flip(frame, 1)
-    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-    # Codifica os pixels do frame atual em um formato que
-    # a biblioteca 'MediaPipe' consegue entender e processar
-    mp_img = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
-
-    # Envia o frame para o modelo que irá reconhecer o possível gesto
-    result = recon.recognize_for_video( mp_img, int(time.time() * 1000) )
-
-    if result.gestures:
-
-      # Escolhe o gesto mais provável. O 'MediaPipe' retorna uma lista
-      # com possíveis gestos, do mais provável para o menos provável
-      top_gesture = result.gestures[0][0]
-
-      gesture_name = top_gesture.category_name
-      confidence = top_gesture.score
-
-      if confidence > 0.6:
-        text = f"Gesture {gesture_name} ({confidence:.2f})"
-
-        cv2.putText(
-          frame, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX,
-          1, (0, 255, 0), 2, cv2.LINE_AA
-        )
-
-      cv2.imshow("MediaPipe Gesture Recognition", frame)
-
-      # Fecha a câmera e sai do loop ao pressionar a tecla "ESC"
-      if cv2.waitKey(5) & 0xFF == 27:
-        break
+def test_socket_connection() -> None:
+  while True:
+    SIO.emit("gesto", "proxima")
+    print("Sent gesto='proxima'")
+    time.sleep(2)
 
 
-cap.release()
-cv2.destroyAllWindows()
+def worker() -> None:
+  """
+  Utiliza um modelo de ML pré-treinado e publicado pelo Google LLC.
+
+  Obs.: O modelo pré-treinado não acompanha este repositório.
+  Se precisar baixá-lo, procure no site oficial do Google (link abaixo).
+
+  - Modelo Pré-treinado: https://storage.googleapis.com/mediapipe-models/gesture_recognizer/gesture_recognizer/float16/1/gesture_recognizer.task
+  - Exemplo no Colab: https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/gesture_recognizer/python/gesture_recognizer.ipynb
+  - Mais informações no artigo: https://developers.google.com/edge/mediapipe/solutions/vision/gesture_recognizer/python
+  """
+  base_options = python.BaseOptions(model_asset_path="model_tasks/gesture_recognizer.task")
+
+
+  # Opções padrão para detecção de gestos de apenas
+  # uma mão em vídeo, com nível de confiança 55%.
+  options = vision.GestureRecognizerOptions(
+    base_options=base_options,
+    running_mode=vision.RunningMode.VIDEO,
+    num_hands=1,
+    # model_complexity=0,
+    min_hand_detection_confidence=CONFIDENCE,
+    min_hand_presence_confidence=CONFIDENCE,
+    min_tracking_confidence=CONFIDENCE
+  )
+
+  # Inicia a primeira câmera disponível.
+  # Se o computador tiver mais de uma, selecione aqui.
+  cap = cv2.VideoCapture(0, cv2.CAP_MSMF)
+
+  ignored_frames = 0
+  frame_id = 0
+
+  # Open browser when camera is ready
+  open_webb("http://localhost:%d/" % EXPECTED_PORT, 2)
+
+  with vision.GestureRecognizer.create_from_options(options) as recon:
+    # Aqui, a função [vision/create_from_options()] carrega e
+    # inicializa o modelo de ML, assim como prepara o ambiente (CPU/GPU)
+    # para processar o vídeo e detectar gestos em tempo real.
+  
+    while cap.isOpened():
+      cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+      cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+      cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+
+      t0 = time.perf_counter()
+      success, frame = cap.read()
+      t1 = time.perf_counter()
+
+      if not success: # Ignora frames vazios ao invés que "quebrar" o programa
+        print("Ignoring empty camera frame #%d...", ignored_frames + 1)
+        ignored_frames = ignored_frames + 1
+        
+        continue
+
+      frame = cv2.flip(frame, 1)
+      rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+      t2 = time.perf_counter()
+
+      # Codifica os pixels do frame atual em um formato que
+      # a biblioteca 'MediaPipe' consegue entender e processar
+      mp_img = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame)
+      t3 = time.perf_counter()
+
+      frame_id += 1 # 304
+
+      # Envia o frame para o modelo que irá reconhecer o possível gesto
+      result = recon.recognize_for_video(mp_img, frame_id)
+      t4 = time.perf_counter()
+
+      print(
+        "read:", t1-t0,
+        "convert:", t2-t1,
+        "image:", t3-t2,
+        "recognize:", t4-t3
+      ) 
+
+      if result.gestures:
+
+        # Escolhe o gesto mais provável. O 'MediaPipe' retorna uma lista
+        # com possíveis gestos, do mais provável para o menos provável
+        top_gesture = result.gestures[0][0]
+
+        gesture_name = top_gesture.category_name
+        confidence = top_gesture.score
+
+        if confidence > 0.6:
+          text = f"Gesture {gesture_name} ({confidence:.2f})"
+
+          if gesture_name in GESTURES_MAP:
+            SIO.emit("gesto", GESTURES_MAP[gesture_name])
+          else:
+            print(" * Gesto não reconhecido ou não mapeado '%s'" % gesture_name)
+
+          cv2.putText(
+            frame, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX,
+            1, (0, 255, 0), 2, cv2.LINE_AA
+          )
+
+        cv2.imshow("MediaPipe Gesture Recognition", frame)
+
+        # Fecha a câmera e sai do loop ao pressionar a tecla "ESC"
+        if cv2.waitKey(5) & 0xFF == 27:
+          break
+
+
+  cap.release()
+  cv2.destroyAllWindows()
+
+
+SIO.start_background_task(worker)
+SIO.start_background_task(test_socket_connection) # Remove before production
+
+SIO.run(APP, port=EXPECTED_PORT)
