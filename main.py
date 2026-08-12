@@ -33,6 +33,7 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 from constants import EXPECTED_PORT, CONFIDENCE
+from gestures_map import GESTURES_MAP
 
 APP = Flask(__name__)
 APP.config["SECRET"] = "secret!"
@@ -147,6 +148,12 @@ def worker() -> None:
 
         if confidence > 0.6:
           text = f"Gesture {gesture_name} ({confidence:.2f})"
+
+          if gesture_name in GESTURES_MAP:
+            SIO.emit("gesto", GESTURES_MAP[gesture_name])
+            print("Sending `gesto=%s`" % gesture_name)
+          else:
+            print("Unrecognized or untracked gesture '%s'" % gesture_name)
 
           cv2.putText(
             frame, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX,
