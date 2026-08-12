@@ -33,12 +33,19 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 from constants import EXPECTED_PORT, CONFIDENCE
-from gestures_map import GESTURES_MAP
 
 APP = Flask(__name__)
 APP.config["SECRET"] = "secret!"
 
-SIO = SocketIO(APP, cors_allowed_origins="*", logger=True, engineio_logger=True)
+SIO = SocketIO(
+  APP,
+  logger=True,
+  engineio_logger=True,
+  cors_allowed_origins=[
+    "http://localhost:%d" % EXPECTED_PORT,
+    "http://127.0.0.1:%d" % EXPECTED_PORT,
+  ],
+)
 
 
 @APP.get("/")
@@ -49,13 +56,6 @@ def serve_index():
 def serve_history():
   return render_template("historia.html")
 
-
-
-def test_socket_connection() -> None:
-  while True:
-    SIO.emit("gesto", "proxima")
-    print("Sent gesto='proxima'")
-    time.sleep(2)
 
 
 def worker() -> None:
@@ -91,14 +91,14 @@ def worker() -> None:
   ignored_frames = 0
   frame_id = 0
 
-  # Open browser when camera is ready
-  open_webb("http://localhost:%d/" % EXPECTED_PORT, 2)
-
   with vision.GestureRecognizer.create_from_options(options) as recon:
     # Aqui, a função [vision/create_from_options()] carrega e
     # inicializa o modelo de ML, assim como prepara o ambiente (CPU/GPU)
     # para processar o vídeo e detectar gestos em tempo real.
-  
+
+    # Open browser when camera is ready
+    open_webb("http://localhost:%d/" % EXPECTED_PORT, 2)
+
     while cap.isOpened():
       cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
       cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
@@ -134,7 +134,7 @@ def worker() -> None:
         "convert:", t2-t1,
         "image:", t3-t2,
         "recognize:", t4-t3
-      ) 
+      )
 
       if result.gestures:
 
@@ -147,11 +147,6 @@ def worker() -> None:
 
         if confidence > 0.6:
           text = f"Gesture {gesture_name} ({confidence:.2f})"
-
-          if gesture_name in GESTURES_MAP:
-            SIO.emit("gesto", GESTURES_MAP[gesture_name])
-          else:
-            print(" * Gesto não reconhecido ou não mapeado '%s'" % gesture_name)
 
           cv2.putText(
             frame, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX,
@@ -170,6 +165,4 @@ def worker() -> None:
 
 
 SIO.start_background_task(worker)
-SIO.start_background_task(test_socket_connection) # Remove before production
-
 SIO.run(APP, port=EXPECTED_PORT)
