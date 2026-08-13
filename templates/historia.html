@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Histórias</title>
+
+    <link rel="stylesheet" href="/static/css/historia.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <div class="topo">
+            <a href="/" class="voltar">
+                ← Voltar para a Galeria
+            </a>
+        </div>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="overlay"></div>
+
+        <div class="hero-content">
+            <span class="categoria"></span>
+
+            <h1 id="nome"></h1>
+
+            <p id="resumo"></p>
+        </div>
+    </section>
+
+    <main class="container">
+
+        <aside class="info-box">
+
+            <h3>Informações Rápidas</h3>
+
+            <ul id="infoRapida"></ul>
+
+        </aside>
+
+        <section class="conteudo">
+
+            <h2>História de Vida</h2>
+
+            <div id="historia"></div>
+
+            <div id="destaque"></div>
+
+            <h2>Importância Histórica</h2>
+
+            <div id="importancia"></div>
+
+            <h2 id="tituloObras">Obras</h2>
+
+            <ul id="obras"></ul>
+
+            <h2>Referências</h2>
+
+            <ul class="referencias" id="referencias"></ul>
+
+        </section>
+
+    </main>
+
+     <!-- <script src="../socket.io/socket.io.js"></script> -->
+  <script src="https://cdn.socket.io/4.8.3/socket.io.min.js"></script>
+
+<script src="/static/js/dados.js"></script>
+<script src="/static/js/historia.js"></script>
+<script src="/static/js/controle.js"></script>
+</body>
+
+</html>

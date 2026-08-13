@@ -1,0 +1,3 @@
+EXPECTED_PORT: int = 5518
+CONFIDENCE: float = 0.5
+GESTURE_HOLD_TIME: float = 0.2

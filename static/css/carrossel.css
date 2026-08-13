@@ -1,0 +1,496 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+
+body{
+
+    background-color:#E8DFCF;
+
+    background-image:
+        radial-gradient(
+            circle at center,
+            rgba(255,248,220,.25) 5%,
+            rgba(232,223,207,.15) 50%,
+            rgba(120,90,50,.25) 100%
+        ),
+        radial-gradient(
+            rgba(0,0,0,.08) .5px,
+            transparent .5px
+        );
+
+    background-size:
+        cover,
+        4px 4px;
+
+
+    font-family:'Inter', sans-serif;
+
+}
+
+
+
+/* ================= HEADER ================= */
+
+
+header{
+
+    width:100%;
+
+    background:rgba(232,223,207,.95);
+
+    backdrop-filter:blur(8px);
+
+    position:sticky;
+
+    top:0;
+
+    z-index:999;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.05);
+
+}
+
+
+
+.topo{
+
+    width:100%;
+
+    padding:15px 5%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border-bottom:1px solid #cbbda8;
+
+}
+
+
+
+/* ================= LOGO ================= */
+
+
+.logo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+
+.material-symbols-outlined.logo-icon{
+
+    font-size:70px !important;
+
+    color:#3F5248;
+
+}
+
+
+
+.logo h2{
+
+    font-family:'Playfair Display', serif;
+
+    color:#3F5248;
+
+    font-size:28px;
+
+    letter-spacing:2px;
+
+}
+
+
+
+.logo span{
+
+    color:#4F433A;
+
+    letter-spacing:2px;
+
+    font-size:14px;
+
+}
+
+
+
+
+
+/* ================= CARROSSEL ================= */
+
+
+.carousel{
+
+    overflow: hidden;
+    
+    width:100%;
+
+    min-height:850px;
+
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+
+    padding:0 60px;
+
+}
+
+
+
+/* área que esconde os cards */
+
+.visor{
+  width:450px;
+  overflow:hidden;
+  border-radius: 1rem;
+}
+
+
+
+/* trilho dos cards */
+
+.track {
+    display: flex;
+    gap: 20px;
+    transition: transform 0.4s ease;
+    will-change: transform;
+}
+
+
+
+
+
+
+/* CARD */
+
+
+.card{
+    flex: 0 0 430px;
+
+    min-width:450px;
+
+    background:#F5EFE4;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:1px solid #D8CCBC;
+
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
+
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+.card:hover{
+
+    box-shadow:
+    0 20px 35px rgba(0,0,0,.15);
+
+}
+
+
+
+
+.card img{
+
+
+    width:100%;
+
+
+    height:450px;
+
+
+    object-fit:cover;
+
+}
+
+/* CONTEÚDO */
+
+
+.conteudo{
+
+
+    padding:25px;
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+    flex:1;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+}
+
+
+
+.conteudo h2{
+
+
+    font-family:'Playfair Display', serif;
+
+
+    color:#3F5248;
+
+
+    margin-bottom:12px;
+
+
+    font-size:32px;
+
+
+}
+
+
+
+.conteudo p{
+
+
+    font-size:16px;
+
+
+    color:#5D5248;
+
+
+    line-height:1.7;
+
+
+    text-align:center;
+
+
+    margin-bottom:25px;
+
+
+}
+
+
+
+.conteudo a{
+
+
+    text-decoration:none;
+
+
+    text-align:center;
+
+
+    background:#3F5248;
+
+
+    color:white;
+
+
+    padding:12px 22px;
+
+
+    width:90%;
+
+
+    border-radius:30px;
+
+
+    font-size:14px;
+
+
+    font-weight:600;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.conteudo a:hover{
+
+
+    background:#B08D57;
+
+
+}
+
+
+
+
+/* ================= SETAS ================= */
+
+
+.seta{
+
+
+    border:none;
+
+
+    background:transparent;
+
+
+    font-size:60px;
+
+
+    cursor:pointer;
+
+
+    color:#3F5248;
+
+
+    width:70px;
+
+
+    height:70px;
+
+
+    display:flex;
+
+
+    align-items:center;
+
+
+    justify-content:center;
+
+
+    transition:.3s;
+
+
+}
+
+
+
+.seta:hover{
+
+
+    transform:scale(1.2);
+
+
+    color:#B08D57;
+
+
+}
+
+
+
+
+/* ================= FOOTER ================= */
+
+
+footer{
+
+
+    background:#3F5248;
+
+
+    color:#F5EFE4;
+
+
+    text-align:center;
+
+
+    padding:30px;
+
+
+    font-size:14px;
+
+
+    line-height:1.8;
+
+}
+
+
+
+
+
+/* ================= RESPONSIVO ================= */
+
+
+@media(max-width:768px){
+
+
+    .topo{
+
+        flex-direction:column;
+
+        gap:20px;
+
+    }
+
+
+
+    .logo{
+
+        flex-direction:column;
+
+        text-align:center;
+
+    }
+
+
+
+    .carousel{
+
+
+        padding:0 20px;
+
+
+    }
+
+
+
+    .visor{
+
+        width:90vw;
+
+    }
+
+
+
+    .card{
+
+
+        min-width:90vw;
+
+    }
+
+
+
+    .seta{
+
+        font-size:40px;
+
+    }
+
+
+}

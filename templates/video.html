@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Galeria de Histórias</title>
+
+    <link rel="stylesheet" href="/static/css/video.css">
+
+    <!-- Fontes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="topo">
+
+            <a href="/" class="voltar">
+                ← Voltar para a Galeria
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= VÍDEO ================= -->
+
+    <main class="pagina-video">
+
+        <div class="video-frame">
+
+            <video
+                id="videoPrincipal"
+                autoplay
+                muted
+                playsinline
+                preload="auto"
+            >
+
+                <source
+                    id="videoSource"
+                    type="video/mp4"
+                >
+
+                Seu navegador não suporta vídeos.
+
+            </video>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================= SCRIPTS ================= -->
+
+    <script src="/static/js/dados.js"></script>
+
+    <script src="/static/js/video.js"></script>
+
+    <script src="/static/js/controle.js"></script>
+
+</body>
+
+</html>
