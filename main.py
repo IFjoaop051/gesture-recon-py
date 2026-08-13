@@ -88,7 +88,7 @@ def worker() -> None:
   - Exemplo no Colab: https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/gesture_recognizer/python/gesture_recognizer.ipynb
   - Mais informações no artigo: https://developers.google.com/edge/mediapipe/solutions/vision/gesture_recognizer/python
   """
-  base_options = python.BaseOptions(model_asset_path="model_tasks/gesture_recognizer.task")
+  base_options = python.BaseOptions( model_asset_path="model_tasks/gesture_recognizer.task" )
 
 
   # Opções padrão para detecção de gestos de apenas
@@ -174,24 +174,31 @@ def worker() -> None:
           if gesture_name != candidate_gesture:
             candidate_gesture = gesture_name
             candidate_since = now
+
           elif now - candidate_since >= GESTURE_HOLD_TIME:
             if in_infinite_scroll_mode:
 
               if gesture_name == "Thumb_Up":
+
                 if last_gesture != "Thumb_Up":
                   SIO.emit("scroll_start", "up")
                   last_gesture = "Thumb_Up"
+
               elif gesture_name == "Thumb_Down":
+
                 if last_gesture != "Thumb_Down":
                   SIO.emit("scroll_start", "start")
                   last_gesture = "Thumb_Down"
+
               else:
+
                 if last_gesture in ("Thumb_Up", "Thumb_Down"):
                   SIO.emit("scroll_stop")
 
                 last_gesture = None
 
             else:
+
               if gesture_name != last_gesture:
                 for gesture in GESTURES_MAP[gesture_name]:
                   SIO.emit("gesto", gesture)
