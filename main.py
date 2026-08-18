@@ -216,13 +216,22 @@ def worker() -> None:
           frame, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX,
           1, (0, 255, 0), 2, cv2.LINE_AA
         )
+
+      else:
+        candidate_gesture = None
+        cadidate_since = 0
+
+        if in_infinite_scroll_mode:
+          if last_gesture in ("Thumb_Up", "Thumb_Down"):
+            SIO.emit("scroll_stop")
+
+        last_gesture = None
         
-        cv2.imshow("MediaPipe Gesture Recognition", frame)
+      cv2.imshow("MediaPipe Gesture Recognition", frame)
 
-        # Fecha a câmera e sai do loop ao pressionar a tecla "ESC"
-        if cv2.waitKey(5) & 0xFF == 27:
-          break
-
+      # Fecha a câmera e sai do loop ao pressionar a tecla "ESC"
+      if cv2.waitKey(5) & 0xFF == 27:
+        break
 
   cap.release()
   cv2.destroyAllWindows()
