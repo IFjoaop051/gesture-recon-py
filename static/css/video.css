@@ -1,0 +1,250 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    min-height:100vh;
+
+    background:#E8DFCF;
+
+    font-family:'Inter',sans-serif;
+
+    color:#4F433A;
+
+    background-image:
+
+        radial-gradient(
+            circle at center,
+            rgba(255,248,220,.25) 5%,
+            rgba(232,223,207,.15) 50%,
+            rgba(120,90,50,.25) 100%
+        ),
+
+        radial-gradient(
+            rgba(0,0,0,.08) .5px,
+            transparent .5px
+        );
+
+    background-size:
+        cover,
+        4px 4px;
+}
+
+
+/* ================= HEADER ================= */
+
+header{
+
+    width:100%;
+
+    background:#F5EFE4;
+
+    padding:20px 8%;
+
+    border-bottom:1px solid #D3C6B7;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:999;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.05);
+}
+
+
+.topo{
+
+    display:flex;
+
+    align-items:center;
+}
+
+
+.voltar{
+
+    text-decoration:none;
+
+    color:#3F5248;
+
+    font-weight:600;
+
+    font-size:15px;
+
+    transition:.3s;
+}
+
+
+.voltar:hover{
+
+    color:#B08D57;
+
+    transform:translateX(-3px);
+}
+
+
+/* ================= ÁREA DO VÍDEO ================= */
+
+.pagina-video{
+
+    min-height:calc(100vh - 73px);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:25px 6%;
+}
+
+
+/* ================= MOLDURA DO VÍDEO ================= */
+
+.video-frame{
+    width:min(430px, 90vw);
+    height:min(78vh, 760px);
+    aspect-ratio:9 / 16;
+
+    background:#3F5248;
+    padding:12px;
+    border-radius:22px;
+    border:2px solid #3F5248;
+
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.18),
+        0 0 0 1px rgba(176,141,87,.35);
+
+    position:relative;
+}
+
+
+/* ================= DETALHE DOURADO ================= */
+
+.video-frame::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:5px;
+
+    border:1px solid rgba(212,179,122,.65);
+
+    border-radius:17px;
+
+    pointer-events:none;
+
+    z-index:2;
+}
+
+
+/* ================= VÍDEO ================= */
+
+.video-frame video{
+
+    display:block;
+
+    width:100%;
+
+    height:100%;
+
+    background:#171C19;
+
+    border-radius:12px;
+
+    object-fit:contain;
+
+    position:relative;
+
+    z-index:1;
+}
+
+
+/* ================= RESPONSIVIDADE ================= */
+
+@media(max-width:900px){
+
+    .pagina-video{
+
+        padding:40px 5%;
+
+    }
+
+    .video-frame{
+
+        width:95vw;
+
+        padding:9px;
+
+        border-radius:18px;
+
+    }
+
+    .video-frame::before{
+
+        inset:4px;
+
+        border-radius:14px;
+
+    }
+
+    .video-frame video{
+
+        border-radius:10px;
+
+    }
+
+}
+
+/* ================= CELULAR ================= */
+
+@media(max-width:600px){
+
+    header{
+
+        padding:18px 5%;
+
+    }
+
+    .pagina-video{
+
+        min-height:calc(100vh - 65px);
+
+        padding:25px 4%;
+
+    }
+
+    .video-frame{
+
+        width:100%;
+
+        padding:7px;
+
+        border-radius:15px;
+
+    }
+
+    .video-frame::before{
+
+        inset:3px;
+
+        border-radius:12px;
+
+    }
+
+    .video-frame video{
+
+        border-radius:9px;
+
+    }
+
+}
